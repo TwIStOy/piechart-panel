@@ -38,8 +38,8 @@ System.register(["angular", "app/core/utils/kbn", "jquery", "jquery.flot", "jque
             ctrl.events.on("render", function () {
               data = ctrl.series;
 
-              if (data) {
-                for (var i in data) {
+              if (ctrl.data.length) {
+                for (var i in ctrl.data) {
                   data[i].color = ctrl.data[i].color;
                 }
 
@@ -157,6 +157,7 @@ System.register(["angular", "app/core/utils/kbn", "jquery", "jquery.flot", "jque
 
               seriesList = data;
               dataList = ctrl.data;
+              var dictDataList = ctrl.dict_data;
               $container.empty();
               var width = panel.legendType == "Right side" && panel.legend.sideWidth ? panel.legend.sideWidth + "px" : "";
               var ieWidth = panel.legendType == "Right side" && panel.legend.sideWidth ? panel.legend.sideWidth - 1 + "px" : "";
@@ -193,16 +194,15 @@ System.register(["angular", "app/core/utils/kbn", "jquery", "jquery.flot", "jque
               var seriesShown = 0;
               var seriesElements = [];
 
-              for (i = 0; i < seriesList.length; i++) {
-                var series = seriesList[i];
+              for (i = 0; i < dataList.length; i++) {
                 var seriesData = dataList[i]; // ignore empty series
 
-                if (panel.legend.hideEmpty && series.allIsNull) {
+                if (panel.legend.hideEmpty && dictDataList[seriesData.label].allIsNull) {
                   continue;
                 } // ignore series excluded via override
 
 
-                if (!series.legend) {
+                if (!dictDataList[seriesData.label].legend) {
                   continue;
                 }
 

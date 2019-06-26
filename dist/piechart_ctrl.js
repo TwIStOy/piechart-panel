@@ -132,12 +132,30 @@ System.register(["app/plugins/sdk", "lodash", "app/core/utils/kbn", "app/core/ti
           value: function parseSeries(series) {
             var _this2 = this;
 
-            return _.map(this.series, function (serie, i) {
+            var tmp_data = {};
+            this.dict_data = {};
+
+            _.map(this.series, function (serie, _) {
+              if (serie.alias in tmp_data) {
+                tmp_data[serie.alias] += serie.stats[_this2.panel.valueName] - 0;
+              } else {
+                tmp_data[serie.alias] = serie.stats[_this2.panel.valueName] - 0;
+              }
+
+              if (serie.alias in _this2.dict_data) {//
+              } else {
+                _this2.dict_data[serie.alias] = serie;
+              }
+            });
+
+            var i = -1;
+            return _.map(tmp_data, function (v, k) {
+              i++;
               return {
-                label: serie.alias,
-                data: serie.stats[_this2.panel.valueName],
-                color: _this2.panel.aliasColors[serie.alias] || _this2.$rootScope.colors[i],
-                legendData: serie.stats[_this2.panel.valueName]
+                label: k,
+                data: v,
+                color: _this2.panel.aliasColors[k] || _this2.$rootScope.colors[i],
+                legendData: v
               };
             });
           }

@@ -76,12 +76,32 @@ export class PieChartCtrl extends MetricsPanelCtrl {
   }
 
   parseSeries(series) {
-    return _.map(this.series, (serie, i) => {
+    var tmp_data = {};
+    this.dict_data = {}
+
+    _.map(this.series, (serie, _) => {
+      if (serie.alias in tmp_data) {
+        tmp_data[serie.alias] += serie.stats[this.panel.valueName] - 0;
+      } else {
+        tmp_data[serie.alias] = serie.stats[this.panel.valueName] - 0;
+      }
+      if (serie.alias in this.dict_data) {
+        //
+      } else {
+        this.dict_data[serie.alias] = serie
+      }
+    });
+
+    var i = -1;
+
+
+    return _.map(tmp_data, (v, k) => {
+      i++;
       return {
-        label: serie.alias,
-        data: serie.stats[this.panel.valueName],
-        color: this.panel.aliasColors[serie.alias] || this.$rootScope.colors[i],
-        legendData: serie.stats[this.panel.valueName],
+        label: k,
+        data: v,
+        color: this.panel.aliasColors[k] || this.$rootScope.colors[i],
+        legendData: v,
       };
     });
   }

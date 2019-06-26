@@ -29,8 +29,8 @@ angular
 
         ctrl.events.on("render", function() {
           data = ctrl.series;
-          if (data) {
-              for (var i in data) {
+          if (ctrl.data.length) {
+              for (var i in ctrl.data) {
                 data[i].color = ctrl.data[i].color;
               }
             render();
@@ -155,6 +155,7 @@ angular
 
           seriesList = data;
           dataList = ctrl.data;
+          var dictDataList = ctrl.dict_data;
 
           $container.empty();
 
@@ -194,16 +195,15 @@ angular
           var seriesShown = 0;
           var seriesElements = [];
 
-          for (i = 0; i < seriesList.length; i++) {
-            var series = seriesList[i];
+          for (i = 0; i < dataList.length; i++) {
             var seriesData = dataList[i];
 
             // ignore empty series
-            if (panel.legend.hideEmpty && series.allIsNull) {
+            if (panel.legend.hideEmpty && dictDataList[seriesData.label].allIsNull) {
               continue;
             }
             // ignore series excluded via override
-            if (!series.legend) {
+            if (!dictDataList[seriesData.label].legend) {
               continue;
             }
 
